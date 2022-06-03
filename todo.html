@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="img/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+
+
+    <title>To-Do List</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="todo.html">To-Do List</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard section -->
+    <div class="container mt-3">
+        <div class="jumbotron">
+            <h1 class="text-center">iNotes</h1>
+            <form>
+                <div class="row p-3">
+                    <div class="col">
+                        <input type="text" class="form-control" id="addtitle" placeholder="Title">
+                        <input type="hidden" id="saveindex">
+                    </div>
+                </div>
+                <div class="text-center d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success m-1" id="addnotesbtn">Add Notes</button>
+                    <button type="button" class="btn btn-dark m-1" style="display: none;" id="savenotesbtn">Save Notes</button>
+                    <button type="button" class="btn btn-danger m-1" onclick="deleteall()" id="deleteallbtn">Delete all Notes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">S. No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody id="tasklist">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- <script>
+        showtask();
+        let addtitle = document.getElementById("addtitle"); // Input Section
+        let addnotesbtn = document.getElementById("addnotesbtn"); // add Button 
+
+        // Add Local Storage
+        addnotesbtn.addEventListener("click", function() {
+            addtitleval = addtitle.value;
+            if (addtitleval.trim() != 0) {
+                let webtask = localStorage.getItem("localtask");
+                if (webtask == null) {
+                    taskobj = [];
+                } else {
+                    taskobj = JSON.parse(webtask);
+                }
+                taskobj.push(addtitleval);
+                localStorage.setItem("localtask", JSON.stringify(taskobj));
+                addtitle.value = '';
+            } else {
+                alert("Please Enter Title");
+            }
+            showtask();
+        });
+
+
+        // Show To-Do List
+        function showtask() {
+            let webtask = localStorage.getItem("localtask");
+            if (webtask == null) {
+                taskobj = [];
+            } else {
+                taskobj = JSON.parse(webtask);
+            }
+            let html = '';
+            let tasklist = document.getElementById("tasklist");
+            taskobj.forEach((item, index) => {
+                html += `<tr>
+                    <th scope="row">${index+1}</th>
+                    <td>${item}</td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm" onclick="edittask(${index})">Edit</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="deletetask(${index})">Delete</button>
+                    </td>
+                </tr>`;
+            });
+            tasklist.innerHTML = html;
+        }
+
+        // Edit To-Do List
+        function edittask(index) {
+            let saveindex = document.getElementById("saveindex");
+            let addnotesbtn = document.getElementById("addnotesbtn");
+            let savenotesbtn = document.getElementById("savenotesbtn");
+            let webtask = localStorage.getItem("localtask");
+            let taskobj = JSON.parse(webtask);
+            addtitle.value = taskobj[index];
+            saveindex.value = index;
+            addnotesbtn.style.display = "none";
+            savenotesbtn.style.display = "block";
+        }
+
+        // Update Task
+
+        let savenotesbtn = document.getElementById("savenotesbtn");
+        savenotesbtn.addEventListener("click", function() {
+            let webtask = localStorage.getItem("localtask");
+            let taskobj = JSON.parse(webtask);
+            let saveindex = document.getElementById("saveindex").value;
+            taskobj[saveindex] = addtitle.value;
+            // Button Disable or enable
+            let addnotesbtn = document.getElementById("addnotesbtn");
+            addnotesbtn.style.display = "block";
+            savenotesbtn.style.display = "none";
+            addtitle.value = '';
+            localStorage.setItem("localtask", JSON.stringify(taskobj));
+            showtask();
+        })
+
+        // Delete task
+        function deletetask(index) {
+            let webtask = localStorage.getItem("localtask");
+            let taskobj = JSON.parse(webtask);
+            taskobj.splice(index, 1);
+            localStorage.setItem("localtask", JSON.stringify(taskobj));
+            showtask();
+        }
+
+        // Delete all task
+        function deleteall() {
+            let webtask = localStorage.getItem("localtask");
+            let taskobj = JSON.parse(webtask);
+            if (taskobj.length > 0) {
+                taskobj.splice(0, webtask.length);
+            } else {
+                alert("No task here");
+            }
+            let addnotesbtn = document.getElementById("addnotesbtn");
+            let savenotesbtn = document.getElementById("savenotesbtn");
+            savenotesbtn.style.display = "none";
+            addnotesbtn.style.display = "block";
+            localStorage.setItem("localtask", JSON.stringify(taskobj));
+            showtask();
+        }
+    </script> -->
+
+
+    <script src="App.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
